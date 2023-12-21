@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Displaying User Data</title>
+    <style>
+        button {
+            margin: 80px auto 10px;
+            background: rgb(2, 19, 208);
+            border-radius: 5px;
+            width: 150px;
+            display: block;
+            color: #fff;
+            height: 40px;
+            border: 1px solid rgb(2, 19, 208);
+        }
+
+        #container {
+            display: grid;
+            gap: 30px;
+            margin: 60px 40px;
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .box {
+            box-shadow: 0 0 8px 3px rgb(207, 204, 204);
+            width: 250px;
+            border-radius: 5px;
+            padding-bottom: 20px;
+            margin: 0 auto;
+        }
+
+        .box img {
+            display: block;
+            margin: 20px auto;
+            border-radius: 50%;
+        }
+
+        .box h3 {
+            text-align: center;
+            font-size: 22px;
+            margin: 5px auto;
+            color: #363636;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .box p {
+            text-align: center;
+            margin: 0;
+            color: #4e4e4e;
+        }
+        @media screen and (max-width:1450px) {
+            #container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media screen and (max-width:1150px) {
+            #container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media screen and (max-width:870px) {
+            #container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media screen and (max-width:650px) {
+            #container {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="fetch">Fetch User Data</button>
+    <div id="container">
+    </div>
+</body>
+
+</html>
+
+<script>
+    var btn = document.querySelector('#fetch');
+    btn.addEventListener('click', () => {
+        fetch('https://reqres.in/api/users')
+            .then(function (res) {
+                return res.json()
+            })
+            .then(function (res) {
+                displayData(res);
+            }).catch(function (err) {
+                console.log(err);
+            })
+    })
+
+    function displayData(res) {
+        var container = document.querySelector('#container');
+        container.innerHTML = '';
+        for (const key in res.data) {
+            var div = document.createElement('div');
+            div.classList.add('box');
+            var img = document.createElement('img');
+            img.src = res.data[key].avatar;
+            var h3 = document.createElement('h3');
+            h3.textContent = res.data[key].first_name + ' ' + res.data[key].last_name;
+            var p = document.createElement('p');
+            p.textContent = res.data[key].email;
+            div.append(img, h3, p);
+            container.append(div);
+        }
+    }
+</script>
